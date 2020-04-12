@@ -57,7 +57,9 @@ Example Use
 To Do List
 ==========
 
-* make the logic asyncrhonous
+* make the logic asyncrhonous via yield
+* implement a count for sampling 
+* implement cutoff after N messages
 
 License
 =======
