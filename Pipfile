@@ -8,7 +8,5 @@ pyinstaller = "*"
 
 [packages]
 argparse = "*"
-json = "*"
-time = "*"
 configparser = "*"
 boto3 = "*"
