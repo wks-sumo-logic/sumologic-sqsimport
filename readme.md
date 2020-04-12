@@ -54,8 +54,8 @@ Example Use
     2. Use a specific configuration file
        ./sqsimport.py -c <configfile>
 
-To Do List:
-===========
+To Do List
+==========
 
 * make the logic asyncrhonous
 
