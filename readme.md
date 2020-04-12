@@ -6,7 +6,7 @@ sqsimport is a generic SQS queue reader, and can be used to read  events off of 
 Installing the Scripts
 =======================
 
-This script is designed to be used within a batch script or DevOPs tool such as Chef or Ansible.
+This script is designed to be run from a local machine, either as a sttanding environment or a lambda.
 It is a python3 script, and the list of the python modules is provided to aid people using a pip install.
 
 You will need to use Python 3.6 or higher and the modules listed in the dependency section.  
@@ -39,6 +39,11 @@ The steps are as follows:
 Dependencies
 ============
 See the contents of "pipfile"
+
+Caveats
+=======
+This script consumes data from an AWS SQS queue. If implemented from your AWS environment
+it may result in extra charges. Please set up billing alerts and baseline use carefully!
 
 Example Use
 ===========
