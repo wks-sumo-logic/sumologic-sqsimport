@@ -84,7 +84,7 @@ try:
     OUTPUTPATH = os.environ["OUTPUTPATH"]
     TIMEOUT = os.environ["TIMEOUT"]
 except KeyError as myerror:
-    print('Environment Variable Not Set :: {} '.format(myerror.args[0]))
+    print(f'Environment Variable Not Set :: {myerror.args[0]}')
 
 S3_ARN = boto3.client('s3', region_name=AWSREGION, aws_access_key_id=AWSKEY, \
     aws_secret_access_key=AWSSECRET)
@@ -96,16 +96,15 @@ def handle_file(path):
     """
     Custom logic for handling files
     """
-    print("Handling File" % path)
+    print(f'Handling File {path}')
 
 def download_message_files(msg):
     """
     Downloads the files from s3 referenced in msg and places them in OUTPUT_PATH.
     download_message_files function will iterate through every file listed at msg['filePaths'],
-    move it to a local path with name "{OUTPUT_PATH}/{s3_path}",
-    and then call handle_file(path).
+    move it to a local path with name "{OUTPUT_PATH}/{s3_path}", and then call handle_file(path).
     """
-    msg_output_path = os.path.join(os.path.abspath(OUTPUTPATH, msg['pathPrefix']))
+    msg_output_path = os.path.join(os.path.abspath(OUTPUTPATH), msg['pathPrefix'])
     if not os.path.exists(msg_output_path):
         os.makedirs(msg_output_path)
     for s3_file in msg['files']:
@@ -122,29 +121,22 @@ def consume_data_replicator():
     """
 
     sleep_time = 1
-    msg_cnt = 0
-    file_cnt = 0
-    byte_cnt = 0
+    msg_count = 0
+    file_count = 0
+    byte_count = 0
 
     queue = SQS_ARN.Queue(url=AWSQUEUE)
 
     while True:
-        # We want to continuously poll the queue for new messages.
-        # Receive messages from queue if any exist
-        # (NOTE: receive_messages() only receives a few messages
-        #        at a time, it does NOT exhaust the queue)
         for msg in queue.receive_messages(VisibilityTimeout=TIMEOUT):
-            msg_cnt += 1
-            # grab the actual message body
+            msg_count += 1
             body = json.loads(msg.body)
             download_message_files(body)
-            file_cnt += body['fileCount']
-            byte_cnt += body['totalSize']
-            # msg.delete() must be called or the message will be
-            # returned to the SQS queue after TIMEOUT seconds
+            file_count += body['fileCount']
+            byte_count += body['totalSize']
             msg.delete()
             time.sleep(sleep_time)
-        print("Messages: %i\tFiles: %i\tBytes: %i" % (msg_cnt, file_cnt, byte_cnt))
+        print(f'Messages: {msg_count}\tFiles: {file_count}\tBytes: {byte_count}')
 
 def main():
     """
